@@ -2,6 +2,8 @@ import express, { Express, Request, Response, NextFunction } from "express";
 import dotenv from "dotenv";
 import cors from "cors";
 import connectDb from "./config/dbConfig";
+import registerRouter from "./routes/registerRoute";
+import userRouter from "./routes/userRoute";
 dotenv.config();
 
 const app: Express = express();
@@ -11,9 +13,12 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
+app.use("/events/:eventId/registration", registerRouter);
+app.use("/user", userRouter);
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: "An error occurred." });
 });
+
 app.get("/", (req: Request, res: Response) => {
   res.send("Express + TypeScript Server");
 });

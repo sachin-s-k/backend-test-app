@@ -3,21 +3,19 @@ import { IUser } from "../interfaces/IUser";
 
 const userSchema: Schema<IUser> = new Schema(
   {
-    firstName: { type: String, required: true },
-    lastName: { type: String, required: true },
-    email: { type: String, required: true },
-    password: { type: String, required: true }, //
-    institute: { type: String, required: true },
-    dateOfBirth: { type: Date, required: true },
+    firstName: { type: String },
+    lastName: { type: String },
+    email: { type: String },
+    password: { type: String },
+    institute: { type: String },
+    dateOfBirth: { type: Date },
     gender: { type: String },
     mobileNumber: { type: String },
+    isSignedUp: { type: Boolean, default: false },
   },
   {
-    timestamps: true, // Correct placement of the timestamps option
+    timestamps: true,
   }
 );
 
-export const UserSchema: Model<IUser> = mongoose.model<IUser>(
-  "user",
-  userSchema
-);
+export const User: Model<IUser> = mongoose.model<IUser>("user", userSchema);
