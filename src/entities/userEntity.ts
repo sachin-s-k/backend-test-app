@@ -12,10 +12,17 @@ const userSchema: Schema<IUser> = new Schema(
     gender: { type: String },
     mobileNumber: { type: String },
     isSignedUp: { type: Boolean, default: false },
+    events: [
+      {
+        type: Schema.Types.ObjectId,
+        ref: "Event",
+        eventStatus: { type: Boolean, default: false },
+      },
+    ],
   },
   {
     timestamps: true,
   }
 );
 
-export const User: Model<IUser> = mongoose.model<IUser>("user", userSchema);
+export const User: Model<IUser> = mongoose.model<IUser>("User", userSchema);

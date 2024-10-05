@@ -5,7 +5,7 @@ import { ITeam } from "../interfaces/ITeam";
 const teamSchema: Schema<ITeam> = new Schema({
   teamCode: { type: String, required: true },
   members: [{ type: Schema.Types.ObjectId, ref: "User" }],
-  eventId: { type: Schema.Types.ObjectId, ref: "EventSchema" },
+  eventId: { type: Schema.Types.ObjectId, ref: "Event" },
 });
 
-export const Team: Model<ITeam> = mongoose.model<ITeam>("team", teamSchema);
+export const Team: Model<ITeam> = mongoose.model<ITeam>("Team", teamSchema);

@@ -1,4 +1,4 @@
-import { Document } from "mongoose";
+import { Document, Schema } from "mongoose";
 
 export interface IUser extends Document {
   firstName: string;
@@ -10,4 +10,5 @@ export interface IUser extends Document {
   gender?: string;
   mobileNumber?: string;
   isSignedUp: boolean;
+  events: [{ eventId: Schema.Types.ObjectId; eventStatus: boolean }];
 }

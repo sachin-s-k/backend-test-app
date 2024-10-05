@@ -13,7 +13,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 
-app.use("/events/:eventId/registration", registerRouter);
+app.use("/events/registration", registerRouter);
 app.use("/user", userRouter);
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: "An error occurred." });

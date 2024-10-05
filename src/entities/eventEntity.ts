@@ -11,13 +11,14 @@ const eventSchema: Schema<IEvent> = new Schema(
     teams: [{ type: Schema.Types.ObjectId, ref: "Team" }],
     organizer: { type: Schema.Types.ObjectId, required: true },
     maxParticipants: { type: Number, required: true },
+    isRegistrationClosed: { type: Boolean, default: false },
   },
   {
     timestamps: true,
   }
 );
 
-export const event: Model<IEvent> = mongoose.model<IEvent>(
+export const Event: Model<IEvent> = mongoose.model<IEvent>(
   "Event",
   eventSchema
 );
