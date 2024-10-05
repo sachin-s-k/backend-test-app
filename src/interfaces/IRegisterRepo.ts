@@ -7,7 +7,8 @@ export interface IRegisterRepo {
   addTeam(
     teamCode: string,
     eventId: string,
-    teamMembers: Array<ObjectId>
+    teamMembers: Array<ObjectId>,
+    typeOfParticipant: string
   ): Promise<IParticipants>;
   addMobileNumber(mobileNumber: string, otp: string): any;
   findMobileNumber(mobileNumber: string): any;
@@ -20,4 +21,6 @@ export interface IRegisterRepo {
     eventId: string
   ): any;
   findEvent(eventId: string): Promise<IEvent | null>;
+
+  addParticipantToEvent(eventId: string, members: any): any;
 }

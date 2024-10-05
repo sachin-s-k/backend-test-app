@@ -4,6 +4,7 @@ import cors from "cors";
 import connectDb from "./config/dbConfig";
 import registerRouter from "./routes/registerRoute";
 import userRouter from "./routes/userRoute";
+import eventRouter from "./routes/eventRouter";
 dotenv.config();
 
 const app: Express = express();
@@ -15,6 +16,7 @@ app.use(cors());
 
 app.use("/events/registration", registerRouter);
 app.use("/user", userRouter);
+app.use("/events", eventRouter);
 app.use((err: Error, req: Request, res: Response, next: NextFunction) => {
   res.status(500).json({ message: "An error occurred." });
 });

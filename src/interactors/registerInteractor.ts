@@ -2,13 +2,10 @@ import { IOTP } from "../interfaces/IOTP";
 import { IRegisterInteractor } from "../interfaces/IRegisterInteractor";
 import { IRegisterRepo } from "../interfaces/IRegisterRepo";
 import { IUser } from "../interfaces/IUser";
-import { createClient } from "redis";
 import dotenv from "dotenv";
 import Twilio from "twilio";
 import { VerificationInstance } from "twilio/lib/rest/verify/v2/service/verification";
-import { OTP } from "../entities/otpEntity";
-import { Schema } from "mongoose";
-import { IParticipants } from "../interfaces/IParticipants";
+
 const verifiSid = process.env.TWILIO_VERIFY_SID as any;
 dotenv.config();
 
@@ -28,33 +25,45 @@ export class RegisterInteractor implements IRegisterInteractor {
     participantType: string,
     members: Array<IUser>
   ) {
-    if (members.length >= 1) {
-      //console.log(members);
+    const eventData = await this.registerRepository.findEvent(eventId);
+    console.log(eventData, eventId, "evveve");
 
-      const participantsData: Array<IUser> =
-        await this.registerRepository.addParticipants(
-          members,
-          participantType,
-          eventId
-        );
-      console.log(participantsData, "======>[part");
-
-      const teamMembers: Array<any> = participantsData.map(
-        (member) => member._id
-      );
-      console.log(participantsData, "participants");
-
-      const teamData: any = await this.registerRepository.addTeam(
-        teamCode,
-        eventId,
-        teamMembers
-      );
-      const teamMembersEmail = participantsData.map((member) => member.email);
-      const eventData: any = await this.registerRepository.findEvent(
-        teamData.eventId
-      );
-      return { teamMembers: teamMembersEmail, eventData };
+    if (eventData?.isRegistrationClosed) {
+      throw new Error("Registration for this event is closed");
     } else {
+      if (members.length >= 1) {
+        //console.log(members);
+
+        const participantsData: Array<IUser> =
+          await this.registerRepository.addParticipants(
+            members,
+            participantType,
+            eventId
+          );
+        console.log(participantsData, "======>[part");
+
+        const teamMembers: Array<any> = participantsData.map(
+          (member) => member._id
+        );
+        console.log(participantsData, "participants");
+
+        const teamData: any = await this.registerRepository.addTeam(
+          teamCode,
+          eventId,
+          teamMembers,
+          participantType
+        );
+
+        const eventDataEntry =
+          await this.registerRepository.addParticipantToEvent(
+            eventId,
+            teamData._id
+          );
+        const teamMembersEmail = participantsData.map((member) => member.email);
+
+        return { teamMembers: teamMembersEmail, eventDataEntry };
+      } else {
+      }
     }
   }
 

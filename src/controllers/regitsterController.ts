@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { IRegisterInteractor } from "../interfaces/IRegisterInteractor";
 import { EmailService } from "../infrastructure/utils/nodeMailer";
-import { json } from "stream/consumers";
 
 export class RegisterController {
   private registerInteractor: IRegisterInteractor;
@@ -16,8 +15,7 @@ export class RegisterController {
     const eventId = req.params.eventId;
     console.log(eventId, "even");
 
-    const { teamCode, participantType, memberOne, memberTwo, memberThree } =
-      req.body;
+    const { teamCode, participantType, members } = req.body;
 
     // const data: any = [memberOne, memberTwo, memberThree];
     // console.log(data);
@@ -32,14 +30,14 @@ export class RegisterController {
           teamCode,
           eventId,
           participantType,
-          [memberOne, memberTwo, memberThree]
+          members
         );
       } else {
         registeredData = await this.registerInteractor.registerParticipant(
           teamCode,
           eventId,
           participantType,
-          [memberOne]
+          members
         );
       }
 
@@ -48,7 +46,7 @@ export class RegisterController {
       // Send notification email to all team members
       await this.emailService.sendEventNotification(
         registeredData.teamMembers,
-        registeredData.eventData.title,
+        registeredData.eventDataEntry.title,
         loginLink
       );
       return res.status(200).json({ message: "Event registered successfully" });

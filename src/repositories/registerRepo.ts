@@ -1,4 +1,4 @@
-import { ObjectId, Schema } from "mongoose";
+import mongoose, { ObjectId, Schema } from "mongoose";
 import { OTP } from "../entities/otpEntity";
 import { Participant } from "../entities/participantsEntity";
 import { User } from "../entities/userEntity";
@@ -11,12 +11,14 @@ export class RegisterRepository implements IRegisterRepo {
   async addTeam(
     teamCode: string,
     eventId: string,
-    teamMembers: Array<Schema.Types.ObjectId>
+    teamMembers: Array<Schema.Types.ObjectId>,
+    typeOfParticipant: string
   ) {
     const teamDataEntry = await Participant.create({
       teamCode,
       eventId,
       members: teamMembers,
+      typeOfParticipant,
     });
     return teamDataEntry;
   }
@@ -108,8 +110,9 @@ export class RegisterRepository implements IRegisterRepo {
       ...updatedUserPromises,
       userInsertPromise,
     ]);
-
     console.log(response, "ALLLLLLL");
+
+    return response[0];
 
     // const userData = await User.insertMany(participants, { ordered: false });
     // return userData;
@@ -152,5 +155,24 @@ export class RegisterRepository implements IRegisterRepo {
   async findEvent(eventId: string) {
     const eventData = await Event.findById(eventId);
     return eventData;
+  }
+
+  async addParticipantToEvent(eventId: string, participantId: string) {
+    console.log(eventId, participantId, "=======eevent========");
+
+    try {
+      const objectIdParticipant = new mongoose.Types.ObjectId(participantId);
+      const particiantEntry = await Event.findByIdAndUpdate(
+        eventId,
+        { $push: { participants: participantId } },
+        { new: true }
+      );
+
+      console.log(particiantEntry, "particpantENTRYYY");
+
+      return particiantEntry;
+    } catch (err) {
+      console.log(err, "errrrrr");
+    }
   }
 }
