@@ -1,7 +1,8 @@
 import { Schema } from "mongoose";
 
-export interface ITeam {
+export interface IParticipants {
   teamCode: string;
+  typeOfParticipant: string;
   members: Schema.Types.ObjectId[];
   eventId: Schema.Types.ObjectId;
 }

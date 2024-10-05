@@ -14,8 +14,7 @@ const userSchema: Schema<IUser> = new Schema(
     isSignedUp: { type: Boolean, default: false },
     events: [
       {
-        type: Schema.Types.ObjectId,
-        ref: "Event",
+        eventId: { type: Schema.Types.ObjectId, ref: "Event" },
         eventStatus: { type: Boolean, default: false },
       },
     ],

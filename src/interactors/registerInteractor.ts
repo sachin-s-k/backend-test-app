@@ -1,4 +1,4 @@
-import { IOTP } from "../interfaces/IOtp";
+import { IOTP } from "../interfaces/IOTP";
 import { IRegisterInteractor } from "../interfaces/IRegisterInteractor";
 import { IRegisterRepo } from "../interfaces/IRegisterRepo";
 import { IUser } from "../interfaces/IUser";
@@ -8,7 +8,7 @@ import Twilio from "twilio";
 import { VerificationInstance } from "twilio/lib/rest/verify/v2/service/verification";
 import { OTP } from "../entities/otpEntity";
 import { Schema } from "mongoose";
-import { ITeam } from "../interfaces/ITeam";
+import { IParticipants } from "../interfaces/IParticipants";
 const verifiSid = process.env.TWILIO_VERIFY_SID as any;
 dotenv.config();
 
@@ -22,14 +22,23 @@ export class RegisterInteractor implements IRegisterInteractor {
     this.registerRepository = registerRepository;
   }
 
-  async registerTeam(teamCode: string, eventId: string, members: Array<IUser>) {
-    console.log(members, "me");
-
-    if (members.length > 1) {
-      console.log(members);
+  async registerParticipant(
+    teamCode: string,
+    eventId: string,
+    participantType: string,
+    members: Array<IUser>
+  ) {
+    if (members.length >= 1) {
+      //console.log(members);
 
       const participantsData: Array<IUser> =
-        await this.registerRepository.addParticipants(members);
+        await this.registerRepository.addParticipants(
+          members,
+          participantType,
+          eventId
+        );
+      console.log(participantsData, "======>[part");
+
       const teamMembers: Array<any> = participantsData.map(
         (member) => member._id
       );
@@ -101,6 +110,8 @@ export class RegisterInteractor implements IRegisterInteractor {
       mobileNumber
     );
 
+    console.log(otpData, "otppp");
+
     if (!otpData) {
       throw new Error("Invalid accesss");
     }
@@ -111,7 +122,7 @@ export class RegisterInteractor implements IRegisterInteractor {
 
       return { success: true, message: "Mobile Number verified successfully." };
     } else {
-      if (otpData.expiresAt < new Date()) {
+      if (otpData.expiresAt < new Date() && otpData.otp === otp) {
         throw new Error("expired OTP.");
       } else {
         throw new Error("Invalid  OTP.");

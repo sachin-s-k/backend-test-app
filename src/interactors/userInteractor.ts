@@ -14,10 +14,20 @@ export class UserInteractor implements IUserInteractor {
   }
 
   async signUpUser(email: string, password: string): Promise<string> {
-    const existingUser = await this.userRepository.findByEmail(email);
+    const existingUser: any = await this.userRepository.findByEmail(email);
 
     if (existingUser) {
-      throw new Error("User with this email already exists");
+      if (existingUser.isSignedUp) {
+        throw new Error("User with this email already exists");
+      } else {
+        const encryptedPassword: string = await hashPassword(password);
+        const userEmail: string = await this.userRepository.updateUser(
+          email,
+          encryptedPassword
+        );
+
+        return this.generateToken(userEmail);
+      }
     } else {
       const encryptedPassword: string = await hashPassword(password);
       const userEmail: string = await this.userRepository.addUser(

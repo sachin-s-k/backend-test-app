@@ -14,11 +14,11 @@ registerRouter.post(
 );
 
 registerRouter.post(
-  "/verify-number",
+  "/:eventId/verify-number",
   (registerController.OnVerifyMobileNumber as any).bind(registerController)
 );
 registerRouter.post(
-  "/verify-otp",
+  "/:eventId/verify-otp",
   (registerController.OnVerifyOtp as any).bind(registerController)
 );
 

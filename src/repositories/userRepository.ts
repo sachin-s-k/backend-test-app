@@ -16,4 +16,16 @@ export class UserRepo implements IUserRepo {
       return userData;
     }
   }
+
+  async updateUser(email: string, password: string) {
+    const userData: any = await User.findOneAndUpdate(
+      { email },
+      { password, isSignedUp: true }
+    );
+    if (userData) {
+      return userData.email;
+    } else {
+      return userData;
+    }
+  }
 }

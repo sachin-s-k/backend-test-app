@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { IRegisterInteractor } from "../interfaces/IRegisterInteractor";
 import { EmailService } from "../infrastructure/utils/nodeMailer";
+import { json } from "stream/consumers";
 
 export class RegisterController {
   private registerInteractor: IRegisterInteractor;
@@ -15,24 +16,41 @@ export class RegisterController {
     const eventId = req.params.eventId;
     console.log(eventId, "even");
 
-    const { teamCode, memberOne, memberTwo, memberThree } = req.body;
+    const { teamCode, participantType, memberOne, memberTwo, memberThree } =
+      req.body;
+
+    // const data: any = [memberOne, memberTwo, memberThree];
+    // console.log(data);
+    // console.log(data.length, "====>", participantType);
 
     try {
-      const mailData: any = await this.registerInteractor.registerTeam(
-        teamCode,
-        eventId,
-        [memberOne, memberTwo, memberThree]
-      );
+      let registeredData: any;
+      if (participantType === "team") {
+        console.log("teamm=======>");
 
-      console.log(mailData, "returnnn");
+        registeredData = await this.registerInteractor.registerParticipant(
+          teamCode,
+          eventId,
+          participantType,
+          [memberOne, memberTwo, memberThree]
+        );
+      } else {
+        registeredData = await this.registerInteractor.registerParticipant(
+          teamCode,
+          eventId,
+          participantType,
+          [memberOne]
+        );
+      }
+
+      console.log(registeredData, "returnnn");
       const loginLink = "http://localhost:3000/signin/";
       // Send notification email to all team members
       await this.emailService.sendEventNotification(
-        mailData.teamMembers,
-        mailData.eventData.title,
+        registeredData.teamMembers,
+        registeredData.eventData.title,
         loginLink
       );
-
       return res.status(200).json({ message: "Event registered successfully" });
     } catch (error: any) {
       res.status(400).json({ message: error.message });
@@ -46,6 +64,8 @@ export class RegisterController {
     const response = await this.registerInteractor.verifiyMobileNumber(
       mobileNumber
     );
+
+    return res.status(200).json(response);
   }
   async OnVerifyOtp(req: Request, res: Response) {
     try {
@@ -54,6 +74,7 @@ export class RegisterController {
         mobileNumber,
         otp
       );
+      return res.status(200).json(response);
     } catch (error: any) {
       return res.status(400).json({ message: error.message });
     }

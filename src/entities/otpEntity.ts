@@ -1,12 +1,12 @@
 import mongoose, { Model, Schema } from "mongoose";
-import { IOTP } from "../interfaces/IOtp";
+import { IOTP } from "../interfaces/IOTP";
 
 const otpSchema: Schema<IOTP> = new Schema(
   {
     mobileNumber: { type: String, required: true },
     otp: { type: String, required: true },
     verified: { type: Boolean, default: false },
-    createdAt: { type: Date, default: Date.now, expires: "5m" },
+    createdAt: { type: Date, default: Date.now, expires: "10m" },
     expiresAt: { type: Date, required: true },
   },
 
