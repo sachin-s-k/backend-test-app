@@ -5,7 +5,7 @@ export interface IUser extends Document {
   lastName: string;
   email: string;
   password?: string;
-  institute: string;
+  institute: Schema.Types.ObjectId;
   dateOfBirth?: Date;
   gender?: string;
   mobileNumber?: string;

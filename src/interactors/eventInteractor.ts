@@ -12,10 +12,26 @@ export class EventInteractor implements IEventInteractor {
     return this.eventRepository.findEvent(eventId);
   }
 
-  createEvent(eventData: IEvent) {
-    return this.eventRepository.addEvent(eventData);
+  createEvent(userId: string, eventData: IEvent) {
+    return this.eventRepository.addEvent(userId, eventData);
   }
   removeEvent(eventId: string) {
     return this.eventRepository.deleteEvent(eventId);
+  }
+  changeEvent(eventId: string, eventData: IEvent) {
+    return this.eventRepository.updateEvent(eventId, eventData);
+  }
+  registrationStatusChange(
+    eventId: string,
+    userId: string,
+    registrationStatus: boolean
+  ) {
+    console.log("event Interactor");
+
+    return this.eventRepository.updateRegistrationStatus(
+      eventId,
+      userId,
+      registrationStatus
+    );
   }
 }

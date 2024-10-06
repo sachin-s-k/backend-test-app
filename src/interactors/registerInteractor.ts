@@ -25,18 +25,37 @@ export class RegisterInteractor implements IRegisterInteractor {
     participantType: string,
     members: Array<IUser>
   ) {
+    const institutes = members.map((member: any) => member.institute);
+    console.log(institutes);
+
+    const instituteData = await this.registerRepository.addInstitute(
+      institutes
+    );
+    console.log(instituteData, "insto=itute");
+    const newMembers = members.map((member) => {
+      for (let instiute of instituteData) {
+        if (member.institute == instiute.name) {
+          member.institute = instiute._id;
+        }
+      }
+
+      return member;
+    });
+
+    console.log(newMembers, "newww");
+
     const eventData = await this.registerRepository.findEvent(eventId);
     console.log(eventData, eventId, "evveve");
 
     if (eventData?.isRegistrationClosed) {
       throw new Error("Registration for this event is closed");
     } else {
-      if (members.length >= 1) {
+      if (newMembers.length >= 1) {
         //console.log(members);
 
         const participantsData: Array<IUser> =
           await this.registerRepository.addParticipants(
-            members,
+            newMembers,
             participantType,
             eventId
           );
@@ -145,5 +164,9 @@ export class RegisterInteractor implements IRegisterInteractor {
     } else {
       return { success: true, message: "This team code available" };
     }
+  }
+
+  getInstitute() {
+    return this.registerRepository.findInstitute();
   }
 }

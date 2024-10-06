@@ -23,4 +23,6 @@ export interface IRegisterRepo {
   findEvent(eventId: string): Promise<IEvent | null>;
 
   addParticipantToEvent(eventId: string, members: any): any;
+  addInstitute(institutes: string[]): any;
+  findInstitute(): any;
 }

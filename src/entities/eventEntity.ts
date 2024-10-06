@@ -3,13 +3,13 @@ import { IEvent } from "../interfaces/IEvent";
 
 const eventSchema: Schema<IEvent> = new Schema(
   {
-    title: { type: String, required: true },
-    eventType: { type: String, required: true },
+    title: { type: String },
+    eventType: { type: String },
     dateOfEvent: { type: Date },
-    category: { type: String, required: true },
+    category: { type: String },
     location: { type: String },
     participants: [{ type: Schema.Types.ObjectId, ref: "Participant" }],
-    organizer: { type: Schema.Types.ObjectId, required: true },
+    organizer: { type: Schema.Types.ObjectId, ref: "User" },
     maxParticipants: { type: Number },
     isRegistrationClosed: { type: Boolean, default: false },
     registrationStartDate: { type: Date },

@@ -5,6 +5,7 @@ import { User } from "../entities/userEntity";
 import { IRegisterRepo } from "../interfaces/IRegisterRepo";
 import { IUser } from "../interfaces/IUser";
 import { Event } from "../entities/eventEntity";
+import { Institute } from "../entities/instituteEntity";
 
 export class RegisterRepository implements IRegisterRepo {
   // Method to add a new team with team members and event ID
@@ -174,5 +175,44 @@ export class RegisterRepository implements IRegisterRepo {
     } catch (err) {
       console.log(err, "errrrrr");
     }
+  }
+
+  async addInstitute(institutes: string[]) {
+    try {
+      console.log("entered into databsae");
+
+      // Find existing institutes by their names (case-insensitive)
+      const existingInstitutes = await Institute.find({
+        name: { $in: institutes },
+      });
+
+      // Extract names of existing institutes
+      const existingInstituteNames = existingInstitutes.map(
+        (inst) => inst.name
+      );
+
+      // Filter out names that are already in the database
+      const newInstitutes = institutes.filter(
+        (inst) => !existingInstituteNames.includes(inst)
+      );
+
+      // Create new institute entries
+      const newInstituteEntries = await Institute.insertMany(
+        newInstitutes.map((name) => ({ name })) // Create a new object for each new institute
+      );
+
+      // Combine existing institutes with newly added ones
+      const updatedInstitutes = [...existingInstitutes, ...newInstituteEntries];
+      console.log("upda", updatedInstitutes);
+
+      return updatedInstitutes; // Return updated list of institutes
+    } catch (error) {
+      console.error("Error adding institutes:", error);
+      throw new Error("Failed to add institutes.");
+    }
+  }
+  async findInstitute() {
+    const intituteData = await Institute.find();
+    return intituteData;
   }
 }

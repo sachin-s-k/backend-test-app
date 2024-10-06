@@ -7,7 +7,7 @@ const userSchema: Schema<IUser> = new Schema(
     lastName: { type: String },
     email: { type: String },
     password: { type: String },
-    institute: { type: String },
+    institute: { type: Schema.Types.ObjectId, ref: "Institute" },
     dateOfBirth: { type: Date },
     gender: { type: String },
     mobileNumber: { type: String },

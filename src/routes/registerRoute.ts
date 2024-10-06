@@ -12,6 +12,10 @@ registerRouter.post(
   "/:eventId",
   (registerController.OnRegister as any).bind(registerController)
 );
+registerRouter.get(
+  "/institute/",
+  (registerController.OnGetInstitute as any).bind(registerController)
+);
 
 registerRouter.post(
   "/:eventId/verify-number",

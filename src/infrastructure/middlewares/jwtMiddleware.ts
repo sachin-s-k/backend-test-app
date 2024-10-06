@@ -6,6 +6,8 @@ dotenv.config();
 
 // middleware to authenticate using jwt
 const jwtAuthMiddleware = (req: any, res: Response, next: NextFunction) => {
+  console.log("token");
+
   const token =
     req.headers["authorization"] && req.headers["authorization"].split(" ")[1];
   if (!token) {
@@ -16,6 +18,8 @@ const jwtAuthMiddleware = (req: any, res: Response, next: NextFunction) => {
 
   try {
     const decoded = jwt.verify(token, process.env.JWT_SECRET_KEY as string);
+    //console.log(decoded, "deeeee");
+
     req.user = decoded;
 
     next();

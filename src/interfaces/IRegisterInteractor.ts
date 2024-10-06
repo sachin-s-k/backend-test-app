@@ -11,4 +11,5 @@ export interface IRegisterInteractor {
   verifiyMobileNumber(mobileNumber: string): any;
   verifyOtp(mobileNumber: string, otp: string): any;
   checkTeamCode(teamCode: string): any;
+  getInstitute(): any;
 }

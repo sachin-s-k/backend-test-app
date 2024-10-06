@@ -89,4 +89,9 @@ export class RegisterController {
       return res.status(400).json({ message: error.message });
     }
   }
+
+  async OnGetInstitute(req: Request, res: Response) {
+    const instituteData = await this.registerInteractor.getInstitute();
+    return res.status(200).json(instituteData);
+  }
 }
