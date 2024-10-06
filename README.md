@@ -16,7 +16,24 @@ This project is a backend service for managing event registrations and participa
 
 ## Overview
 
-The Event Test Backend is built using Node.js and Express. It utilizes MongoDB for storing data and provides a RESTful API for interacting with the system. The backend supports creating events, registering participants, managing event status, and providing user authentication and authorization.
+The **Event Test Backend** is built using Node.js, Express, and TypeScript, following the Clean Architecture principles with Dependency Injection.
+
+### Why TypeScript?
+
+1. **Type Safety**: TypeScript enables static typing, providing better type-checking during development, reducing runtime errors, and making refactoring easier.
+2. **Improved Developer Experience**: Autocompletion, type inference, and IntelliSense support in IDEs enhance code quality and developer productivity.
+3. **Maintainability and Readability**: Explicit typing and interfaces make code more understandable and maintainable, especially in large-scale applications.
+4. **Early Error Detection**: Errors are caught at compile time, reducing the number of bugs in production.
+
+### Why Clean Architecture with Dependency Injection?
+
+1. **Separation of Concerns**: Clean Architecture separates business logic, application logic, and infrastructure, promoting a modular codebase that is easier to maintain and test.
+2. **Scalability and Flexibility**: Changes in one module (e.g., switching databases) don't affect other modules, making the codebase more adaptable to changes.
+3. **Testability**: Business logic is isolated, allowing for more granular unit and integration testing without the need for complex mocks or test setups.
+4. **Dependency Management**: Dependency Injection decouples modules, allowing each component to work independently, reducing the chances of tight coupling and improving reusability.
+5. **Ease of Refactoring**: The architecture enables easy swapping of different layers (e.g., replacing a data source or external service) without affecting the core business logic.
+
+The backend supports creating events, registering participants, managing event status, and providing user authentication and authorization.
 
 ## Prerequisites
 
