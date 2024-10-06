@@ -1,4 +1,4 @@
-# Event Management Backend
+# Event Backend Test App
 
 This project is a backend service for managing event registrations and participant data. It provides endpoints for creating events, handling registrations, and managing users (admin and participants). This service supports role-based access control and integrates with a MongoDB database for data persistence.
 
@@ -16,7 +16,7 @@ This project is a backend service for managing event registrations and participa
 
 ## Overview
 
-The Event Management Backend is built using Node.js and Express. It utilizes MongoDB for storing data and provides a RESTful API for interacting with the system. The backend supports creating events, registering participants, managing event status, and providing user authentication and authorization.
+The Event Test Backend is built using Node.js and Express. It utilizes MongoDB for storing data and provides a RESTful API for interacting with the system. The backend supports creating events, registering participants, managing event status, and providing user authentication and authorization.
 
 ## Prerequisites
 
@@ -33,4 +33,22 @@ Before you begin, ensure you have the following installed on your system:
    ```bash
    git clone https://github.com/your-username/event-management-backend.git
    cd event-management-backend
+   ```
+
+2. **move to:**
+
+   ```bash
+   cd backend-test-app
+   ```
+
+3. **Install depenencies:**
+
+   ```bash
+   npm install
+   ```
+
+4. **To start:**
+
+   ```bash
+   npm run dev
    ```
