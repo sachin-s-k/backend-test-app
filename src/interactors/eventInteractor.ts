@@ -1,12 +1,21 @@
+import { IEvent } from "../interfaces/IEvent";
 import { IEventInteractor } from "../interfaces/IEventInteractor";
 import { IEventRepo } from "../interfaces/IEventRepo";
 
 export class EventInteractor implements IEventInteractor {
-  private eventRepo: IEventRepo;
+  private eventRepository: IEventRepo;
   constructor(eventRepo: IEventRepo) {
-    this.eventRepo = eventRepo;
+    this.eventRepository = eventRepo;
   }
-  async getEvent(eventId: string) {
-    return this.eventRepo.findEvent(eventId);
+
+  getEvent(eventId: string) {
+    return this.eventRepository.findEvent(eventId);
+  }
+
+  createEvent(eventData: IEvent) {
+    return this.eventRepository.addEvent(eventData);
+  }
+  removeEvent(eventId: string) {
+    return this.eventRepository.deleteEvent(eventId);
   }
 }

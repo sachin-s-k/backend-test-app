@@ -13,12 +13,14 @@ export interface IEvent extends Document {
   registrationStartDate?: Date;
   registrationEndDate?: Date;
   isPublicEvent: boolean;
-  maxParticipants: Number;
+  maxParticipants: number;
   isRegistrationClosed: boolean;
   entryFee?: number;
   rulesAndRegulations?: string[];
   prizes?: string[];
-  maxTeamSize: Number;
-  minTeamSize: Number;
+  maxTeamSize: number;
+  minTeamSize: number;
   eventStatus: string;
+  requireSameOrganization: boolean;
+  unassignedParticipantCode: boolean;
 }

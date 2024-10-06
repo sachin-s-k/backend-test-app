@@ -10,7 +10,7 @@ const eventSchema: Schema<IEvent> = new Schema(
     location: { type: String },
     participants: [{ type: Schema.Types.ObjectId, ref: "Participant" }],
     organizer: { type: Schema.Types.ObjectId, required: true },
-    maxParticipants: { type: Number, required: true },
+    maxParticipants: { type: Number },
     isRegistrationClosed: { type: Boolean, default: false },
     registrationStartDate: { type: Date },
     registrationEndDate: { type: Date },
@@ -18,6 +18,8 @@ const eventSchema: Schema<IEvent> = new Schema(
     minTeamSize: { type: Number, default: 2 },
     eventStatus: { type: String },
     rulesAndRegulations: [{ type: String }],
+    requireSameOrganization: { type: Boolean, default: false },
+    unassignedParticipantCode: { type: Boolean, default: false },
   },
   {
     timestamps: true,

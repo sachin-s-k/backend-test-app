@@ -1,20 +1,25 @@
 import express, { Router } from "express";
-import { EventRepo } from "../repositories/eventRepo";
+import { EventRepository } from "../repositories/eventRepo";
 import { EventInteractor } from "../interactors/eventInteractor";
-import { EventController } from "../controllers/eventCotroller";
+import { EventController } from "../controllers/eventController";
 
 const eventRouter: Router = express.Router();
 
-const eventRepo = new EventRepo();
-const eventInteractor = new EventInteractor(eventRepo);
+const eventRepository = new EventRepository();
+const eventInteractor = new EventInteractor(eventRepository);
 const eventController = new EventController(eventInteractor);
 
-eventRouter.post("/");
+eventRouter.post(
+  "/",
+  (eventController.onCreateEvent as any).bind(eventController)
+);
 eventRouter.get(
   "/:eventId",
   (eventController.OnFindEvent as any).bind(eventController)
 );
-eventRouter.get("/");
 eventRouter.put("/:eventId");
-eventRouter.delete("/:eventId");
+eventRouter.delete(
+  "/:eventId",
+  (eventController.OnDeleteEvent as any).bind(eventController)
+);
 export default eventRouter;

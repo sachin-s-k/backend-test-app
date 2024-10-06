@@ -3,10 +3,14 @@ import { IUser } from "../interfaces/IUser";
 import { IUserRepo } from "../interfaces/IUserRepo";
 
 export class UserRepo implements IUserRepo {
-  async addUser(email: string, password: string): Promise<string> {
-    const user = await User.create({ email, password, isSignedUp: true });
+  async addUser(email: string, password: string): Promise<IUser> {
+    const user: IUser = await User.create({
+      email,
+      password,
+      isSignedUp: true,
+    });
 
-    return user.email;
+    return user;
   }
   async findByEmail(email: string): Promise<any> {
     const userData: any = await User.findOne({ email });
@@ -23,7 +27,7 @@ export class UserRepo implements IUserRepo {
       { password, isSignedUp: true }
     );
     if (userData) {
-      return userData.email;
+      return userData;
     } else {
       return userData;
     }
