@@ -41,6 +41,11 @@ export class UserInteractor implements IUserInteractor {
 
   async loginUser(email: string, password: string): Promise<string | null> {
     const userData: any = await this.userRepository.findByEmail(email);
+    if (!userData || (userData.email && !userData.isSignedUp)) {
+      throw new Error(
+        "Account not found. Please sign up to create an account."
+      );
+    }
 
     if (!userData || !(await comparePassword(password, userData.password))) {
       throw new Error("Invalid email or password");
