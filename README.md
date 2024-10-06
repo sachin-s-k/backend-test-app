@@ -9,10 +9,7 @@ This project is a backend service for managing event registrations and participa
 - [Installation](#installation)
 - [Configuration](#configuration)
 - [Running the Application](#running-the-application)
-- [API Documentation](#api-documentation)
-- [Folder Structure](#folder-structure)
-- [Contributing](#contributing)
-- [License](#license)
+- [API Documentation](https://documenter.getpostman.com/view/27886806/2sAXxMgti4)
 
 ## Overview
 
