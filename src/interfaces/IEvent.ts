@@ -16,6 +16,9 @@ export interface IEvent extends Document {
   maxParticipants: Number;
   isRegistrationClosed: boolean;
   entryFee?: number;
-  rulesAndRegulations?: string;
+  rulesAndRegulations?: string[];
   prizes?: string[];
+  maxTeamSize: Number;
+  minTeamSize: Number;
+  eventStatus: string;
 }
