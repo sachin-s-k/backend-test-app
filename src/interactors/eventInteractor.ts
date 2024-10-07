@@ -34,4 +34,24 @@ export class EventInteractor implements IEventInteractor {
       registrationStatus
     );
   }
+
+  changeRegistrationResponse(
+    userId: string,
+    eventId: string,
+    isAccepted: boolean
+  ) {
+    return this.eventRepository.updateRegistrationResponse(
+      userId,
+      eventId,
+      isAccepted
+    );
+  }
+
+  removeParticipants(userId: string, eventId: string, participantId: string) {
+    return this.eventRepository.deleteParticipants(
+      userId,
+      eventId,
+      participantId
+    );
+  }
 }

@@ -10,4 +10,14 @@ export interface IEventInteractor {
     userId: string,
     registrationStatus: boolean
   ): any;
+  changeRegistrationResponse(
+    userId: string,
+    eventId: string,
+    isAccepted: boolean
+  ): any;
+  removeParticipants(
+    userId: string,
+    eventId: string,
+    ParticipantId: string
+  ): any;
 }

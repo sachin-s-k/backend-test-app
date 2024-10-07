@@ -252,4 +252,127 @@ export class EventController {
       });
     }
   }
+
+  async OnRegistrationResponse(req: any, res: Response) {
+    try {
+      const user = req.user;
+
+      if (!user || !user.userId) {
+        return res.status(401).json({
+          success: false,
+          message: "Unauthorized: User not authenticated.",
+        });
+      }
+
+      const { eventId } = req.params;
+      if (!eventId) {
+        return res.status(400).json({
+          success: false,
+          message: "Bad Request: Event ID is required.",
+        });
+      }
+
+      const { isAccepted } = req.body;
+      const registrationResponse =
+        await this.eventInteractor.changeRegistrationResponse(
+          user.userId,
+          eventId,
+          isAccepted
+        );
+
+      if (!registrationResponse) {
+        return res.status(404).json({
+          success: false,
+          message:
+            "Event not found. Unable to update the event response status.",
+        });
+      }
+      console.log(registrationResponse, "reg");
+
+      if (registrationResponse.isAccepted == "true") {
+        return res.status(200).json({
+          success: true,
+          message: "Event accepted  successfully.",
+        });
+      } else {
+        return res.status(200).json({
+          success: true,
+          message: "Event rejected  successfully.",
+        });
+      }
+    } catch (error: any) {
+      console.error("Error updating event:", error);
+
+      // Determine the type of error and send appropriate response
+      let statusCode = 500; // Internal Server Error
+      let errorMessage =
+        "An error occurred while updating the registration response";
+
+      if (error.name === "ValidationError") {
+        statusCode = 400; // Bad Request
+        errorMessage = "Validation Error: Please check the input data.";
+      } else if (error.name === "CastError") {
+        statusCode = 400; // Bad Request
+        errorMessage = "Invalid Event ID format.";
+      }
+
+      return res.status(statusCode).json({
+        success: false,
+        message: errorMessage,
+        error: error.message,
+      });
+    }
+  }
+  async OnRemovePartcipant(req: any, res: Response) {
+    try {
+      const user = req.user;
+
+      if (!user || !user.userId) {
+        return res.status(401).json({
+          success: false,
+          message: "Unauthorized: User not authenticated.",
+        });
+      }
+
+      const { eventId } = req.params;
+      const { participantId } = req.query;
+      console.log(eventId, participantId, "????????????");
+
+      if (!eventId) {
+        return res.status(400).json({
+          success: false,
+          message: "Bad Request: Event ID is required.",
+        });
+      }
+
+      const removeResponse = await this.eventInteractor.removeParticipants(
+        user.userId,
+        eventId,
+        participantId
+      );
+
+      if (removeResponse) {
+        res.status(200).json({
+          message: "Participnats removed successfully",
+          removeResponse,
+        });
+      }
+    } catch (error: any) {
+      if (error.name === "CastError") {
+        // Handle invalid MongoDB ObjectID errors
+        return res.status(400).json({
+          success: false,
+          message: "Invalid Partcipant ID. Please provide a valid ID.",
+        });
+      }
+
+      // For other errors, respond with a 500 Internal Server Error
+      return res.status(500).json({
+        success: false,
+        message:
+          "An unexpected error occurred while deleting the e partcipant.",
+        details: error.message,
+      });
+    }
+  }
 }

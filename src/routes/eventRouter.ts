@@ -33,4 +33,15 @@ eventRouter.patch(
   jwtAuthMiddleware as any,
   (eventController.OnEventRegistrationStatus as any).bind(eventController)
 );
+eventRouter.post(
+  "/registration-response/:eventId",
+  jwtAuthMiddleware as any,
+  (eventController.OnRegistrationResponse as any).bind(eventController)
+);
+
+eventRouter.delete(
+  "/partcipants/:eventId",
+  jwtAuthMiddleware as any,
+  (eventController.OnRemovePartcipant as any).bind(eventController)
+);
 export default eventRouter;

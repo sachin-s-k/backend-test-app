@@ -15,10 +15,14 @@ export class RegisterRepository implements IRegisterRepo {
     teamMembers: Array<Schema.Types.ObjectId>,
     typeOfParticipant: string
   ) {
+    const formattedMembers = teamMembers.map((userId: any) => ({
+      userId: userId, // Assuming userId is passed directly in the body
+      isAccepted: false, // Default value
+    }));
     const teamDataEntry = await Participant.create({
       teamCode,
       eventId,
-      members: teamMembers,
+      members: formattedMembers,
       typeOfParticipant,
     });
     return teamDataEntry;

@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { IUserInteractor } from "../interfaces/IUserInteractor";
+import { validationResult } from "express-validator";
 
 export class UserController {
   private userInteractor: IUserInteractor;
@@ -23,6 +24,11 @@ export class UserController {
 
   async OnSignUp(req: Request, res: Response) {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
+
       const { email, password } = req.body;
       const token = await this.userInteractor.signUpUser(email, password);
       return res.json({ token });

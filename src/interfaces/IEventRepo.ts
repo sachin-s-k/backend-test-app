@@ -10,4 +10,15 @@ export interface IEventRepo {
     userId: string,
     registrationStatus: boolean
   ): any;
+  updateRegistrationResponse(
+    userId: string,
+    eventId: string,
+    isAccepted: boolean
+  ): any;
+
+  deleteParticipants(
+    userId: string,
+    eventId: string,
+    participantId: string
+  ): any;
 }
