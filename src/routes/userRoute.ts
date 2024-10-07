@@ -11,6 +11,7 @@ const userController = new UserController(userInteractor);
 
 userRouter.post(
   "/signin",
+  [body("email").isEmail().normalizeEmail().withMessage("Invalid email")],
   (userController.OnLogin as any).bind(userController)
 );
 userRouter.post(

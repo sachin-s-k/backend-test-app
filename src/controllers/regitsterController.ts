@@ -1,6 +1,7 @@
 import { Request, Response } from "express";
 import { IRegisterInteractor } from "../interfaces/IRegisterInteractor";
 import { EmailService } from "../infrastructure/utils/nodeMailer";
+import { validationResult } from "express-validator";
 
 export class RegisterController {
   private registerInteractor: IRegisterInteractor;
@@ -57,6 +58,14 @@ export class RegisterController {
 
   async OnVerifyMobileNumber(req: Request, res: Response) {
     console.log("enetrddd");
+    const errors = validationResult(req);
+    if (!errors.isEmpty()) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid mobile number provided.",
+        errors: errors.array(),
+      });
+    }
 
     const { mobileNumber } = req.body;
     const response = await this.registerInteractor.verifiyMobileNumber(
@@ -67,6 +76,14 @@ export class RegisterController {
   }
   async OnVerifyOtp(req: Request, res: Response) {
     try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({
+          success: false,
+          message: "Invalid OTP number provided.",
+          errors: errors.array(),
+        });
+      }
       const { mobileNumber, otp } = req.body;
       const response = await this.registerInteractor.verifyOtp(
         mobileNumber,
