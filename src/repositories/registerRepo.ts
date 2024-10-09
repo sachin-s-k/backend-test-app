@@ -13,7 +13,8 @@ export class RegisterRepository implements IRegisterRepo {
     teamCode: string,
     eventId: string,
     teamMembers: Array<Schema.Types.ObjectId>,
-    typeOfParticipant: string
+    typeOfParticipant: string,
+    teamImage: any
   ) {
     const formattedMembers = teamMembers.map((userId: any) => ({
       userId: userId, // Assuming userId is passed directly in the body
@@ -24,6 +25,7 @@ export class RegisterRepository implements IRegisterRepo {
       eventId,
       members: formattedMembers,
       typeOfParticipant,
+      teamImage,
     });
     return teamDataEntry;
   }
@@ -127,7 +129,7 @@ export class RegisterRepository implements IRegisterRepo {
     const otpData = await OTP.create({
       mobileNumber,
       otp,
-      expiresAt: new Date(Date.now() + 1 * 60 * 1000),
+      expiresAt: new Date(Date.now() + 5 * 60 * 1000),
     });
 
     return otpData;
@@ -148,11 +150,17 @@ export class RegisterRepository implements IRegisterRepo {
   }
 
   async updateOtp(mobileNumber: string, otp: string) {
-    const otpEntry = await OTP.findOneAndUpdate({ mobileNumber }, { otp });
+    const otpEntry = await OTP.findOneAndUpdate(
+      { mobileNumber },
+      { otp },
+      { new: true }
+    );
     return otpEntry;
   }
 
   async findTeamCode(teamCode: string) {
+    console.log("tem repoooo");
+
     const teamCodeData = await Participant.findOne({ teamCode });
     return teamCodeData;
   }
@@ -218,5 +226,15 @@ export class RegisterRepository implements IRegisterRepo {
   async findInstitute() {
     const intituteData = await Institute.find();
     return intituteData;
+  }
+
+  async findUserAccount(mobileNumber: string) {
+    const userData = await User.findOne({ mobileNumber });
+    return userData;
+  }
+
+  async findVerifiedNumbers() {
+    const numberData = await OTP.find();
+    return numberData;
   }
 }

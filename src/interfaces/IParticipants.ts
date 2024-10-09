@@ -5,4 +5,5 @@ export interface IParticipants {
   typeOfParticipant: string;
   members: Schema.Types.ObjectId[];
   eventId: Schema.Types.ObjectId;
+  teamImage: any;
 }

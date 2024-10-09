@@ -8,7 +8,8 @@ export interface IRegisterRepo {
     teamCode: string,
     eventId: string,
     teamMembers: Array<ObjectId>,
-    typeOfParticipant: string
+    typeOfParticipant: string,
+    teamImage: any
   ): Promise<IParticipants>;
   addMobileNumber(mobileNumber: string, otp: string): any;
   findMobileNumber(mobileNumber: string): any;
@@ -25,4 +26,6 @@ export interface IRegisterRepo {
   addParticipantToEvent(eventId: string, members: any): any;
   addInstitute(institutes: string[]): any;
   findInstitute(): any;
+  findUserAccount(mobileNumber: string): Promise<IUser | null>;
+  findVerifiedNumbers(): any;
 }

@@ -23,7 +23,8 @@ export class RegisterInteractor implements IRegisterInteractor {
     teamCode: string,
     eventId: string,
     participantType: string,
-    members: Array<IUser>
+    members: Array<IUser>,
+    teamImage: any
   ) {
     const institutes = members.map((member: any) => member.institute);
     console.log(institutes);
@@ -70,7 +71,8 @@ export class RegisterInteractor implements IRegisterInteractor {
           teamCode,
           eventId,
           teamMembers,
-          participantType
+          participantType,
+          teamImage
         );
 
         const eventDataEntry =
@@ -88,34 +90,48 @@ export class RegisterInteractor implements IRegisterInteractor {
 
   registerIndividual(teamCode: string, person: IUser) {}
 
-  async verifiyMobileNumber(mobileNumber: string) {
-    const numberExist = await this.registerRepository.findMobileNumber(
+  async verifiyMobileNumber(mobileNumber: string, email: string) {
+    const userData = await this.registerRepository.findUserAccount(
       mobileNumber
     );
-    let otpData: IOTP;
-    const otp: string = this.generateOtp();
-    if (numberExist) {
-      otpData = await this.registerRepository.updateOtp(mobileNumber, otp);
+    // check the mobile number linked with another account
+    if (userData?.email == email || !userData) {
+      // here otp is going to send
+
+      //  console.log(`+91${mobileNumber}`, process.env.MOBILE_NUMBER);
+
+      try {
+        const numberExist = await this.registerRepository.findMobileNumber(
+          mobileNumber
+        );
+        let otpData: IOTP;
+        const otp: string = this.generateOtp();
+        if (numberExist) {
+          otpData = await this.registerRepository.updateOtp(mobileNumber, otp);
+        } else {
+          otpData = await this.registerRepository.addMobileNumber(
+            mobileNumber,
+            otp
+          );
+
+          console.log(otpData, "otppppppppDaatr");
+        }
+
+        // here otp is storing to the database
+        if (otpData) {
+          await client.messages.create({
+            body: `Your OTP for verifying your number in the Lit School is:${otpData.otp}. Please enter it within 5 minutes to proceed`,
+            from: process.env.MOBILE_NUMBER, //  your Twilio phone number
+            to: `+91${mobileNumber}`, // mobile numeber with country code
+          });
+          return { success: true, message: "OTP successfully send" };
+        }
+        // const otpSendData = await this.createVerifictation(mobileNumber);
+      } catch (error) {
+        console.log(error);
+      }
     } else {
-      otpData = await this.registerRepository.addMobileNumber(
-        mobileNumber,
-        otp
-      );
-
-      console.log(otpData, "otppppppppDaatr");
-    }
-    //  console.log(`+91${mobileNumber}`, process.env.MOBILE_NUMBER);
-
-    try {
-      await client.messages.create({
-        body: `Your OTP for verifying your number in the Lit School is:${otpData.otp}. Please enter it within 5 minutes to proceed`,
-        from: process.env.MOBILE_NUMBER, //  your Twilio phone number
-        to: `+91${mobileNumber}`, // mobile numeber with country code
-      });
-      return { success: true, message: "OTP successfully send" };
-      // const otpSendData = await this.createVerifictation(mobileNumber);
-    } catch (error) {
-      console.log(error);
+      throw new Error("This mobile number is linked to another account");
     }
   }
 
@@ -144,7 +160,7 @@ export class RegisterInteractor implements IRegisterInteractor {
       throw new Error("Invalid accesss");
     }
     // Check if OTP matches and is not expired
-    if (otpData.otp === otp && otpData.expiresAt > new Date()) {
+    if (otpData.otp == otp && otpData.expiresAt > new Date()) {
       // Mark OTP as verified
       await this.registerRepository.updateVerificationStatus(mobileNumber);
 
@@ -160,7 +176,10 @@ export class RegisterInteractor implements IRegisterInteractor {
   async checkTeamCode(teamCode: string) {
     const teamCodeData = await this.registerRepository.findTeamCode(teamCode);
     if (teamCodeData) {
-      throw new Error("This team code has already been taken");
+      return {
+        success: false,
+        message: "This team code has already been taken",
+      };
     } else {
       return { success: true, message: "This team code available" };
     }
@@ -169,4 +188,6 @@ export class RegisterInteractor implements IRegisterInteractor {
   getInstitute() {
     return this.registerRepository.findInstitute();
   }
+
+  getVerifiedNumbers() {}
 }

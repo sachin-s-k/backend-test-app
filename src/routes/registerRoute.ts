@@ -13,6 +13,16 @@ registerRouter.post(
   "/:eventId",
   (registerController.OnRegister as any).bind(registerController)
 );
+registerRouter.post(
+  "/:eventId/verified-numbers",
+  (registerController.OnGetVerifiedNumbers as any).bind(registerController)
+);
+
+registerRouter.post(
+  "/code/teamcode",
+  (registerController.OnFindTeamCode as any).bind(registerController)
+);
+
 registerRouter.get(
   "/institute/",
   (registerController.OnGetInstitute as any).bind(registerController)
@@ -39,11 +49,6 @@ registerRouter.post(
       .withMessage("OTP number must only contain numeric characters."),
   ],
   (registerController.OnVerifyOtp as any).bind(registerController)
-);
-
-registerRouter.post(
-  "/team-code",
-  (registerController.OnFindTeamCode as any).bind(registerController)
 );
 
 export default registerRouter;
